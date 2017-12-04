@@ -1,0 +1,20 @@
+nodejs-koa使用说明
+1.app.js启动文件
+2.test.js创建数据库测试
+3.bin相关配置文件夹
+3.1 config数据库配置文件夹
+3.1.1 config-default.js默认链接数据库配置
+3.1.2 config-test.js测试数据链接配置
+3.1.3 config-overrie.js正式数据链接配置
+3.2 config.js 数据库配置文件
+3.3 controller.js路由控制器
+3.4 db.js数据库初始化
+3.5 model.js数据库模块控制
+3.6 rest.js添加api接口请求路由
+3.7 static-files.js静态资源加载
+3.8 templating.js服务器视图模板渲染
+4.modules创建数据表文件夹
+4.1 User.js 创建用户表
+5.static静态资源加载
+6.views视图文件夹
+7.controllers路由文件夹
