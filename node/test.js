@@ -8,7 +8,7 @@ let
     Team = model.Team,
     TeamMember = model.TeamMembers;
 User.hasOne(UserLoginInfo,{foreignKey:"U_Id"});
-UserLoginInfo.belongsTo(User);
+UserLoginInfo.belongsTo(User,{foreignKey:"U_Id"});
 // User.hasMany(Group);
 // User.hasMany(Team);
 // User.belongsToMany(Group,{through: "IM_GroupMembers"});
