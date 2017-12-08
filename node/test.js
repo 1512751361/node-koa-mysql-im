@@ -1,5 +1,4 @@
 const model = require('./bin/model');
-//const model = require("./bin/model");
 //model.sync();
 let
     User = model.User,
@@ -8,7 +7,7 @@ let
     GroupMembers = model.GroupMembers,
     Team = model.Team,
     TeamMember = model.TeamMembers;
-User.hasOne(UserLoginInfo);
+User.hasOne(UserLoginInfo,{foreignKey:"U_Id"});
 UserLoginInfo.belongsTo(User);
 // User.hasMany(Group);
 // User.hasMany(Team);
@@ -24,6 +23,7 @@ console.log("test");
         UserAlias: "火六"
     }).then(function(user){
         var userLoginInfo = UserLoginInfo.build({U_Id:user.Id});
+        console.log(userLoginInfo);
         user.setIM_UserLoginInfo(userLoginInfo);
     }).catch(function(err) {
         // print the error details

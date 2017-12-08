@@ -7,6 +7,7 @@ module.exports = db.defineModel("IM_UserLoginInfo",{
         type: db.STRING(50),
         unique: true,
         allowNull: false,
+        field: "U_Id",
         references: {
             model: "IM_Users",
             key: "Id",
