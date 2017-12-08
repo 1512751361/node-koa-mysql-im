@@ -1,6 +1,6 @@
 var config = {
     dialect: "mysql",
-    database: "nodejstest",//使用哪个数据库
+    database: "nodekoamysqlim",//使用哪个数据库
     username: "root",//用户名
     password: "",//口令
     host: "localhost",//主机名

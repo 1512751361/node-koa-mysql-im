@@ -2,30 +2,33 @@
 //数据库模块
 const model = require("../bin/model");
 const APIError = require("../bin/rest").APIError;
+const rongCloud = require("../moduleTools/rongCloud");
 //用户表
-let User = model.User;
+let User = model.User,
+    UserLoginInfo = model.UserLoginInfo;
 
 module.exports = {
-    "GET /api/users/login": async(ctx,next)=>{
+    "POST /api/users/login": async(ctx,next)=>{
         var
-            t = {},
-            user;
-        t.account = "lhs";
-        t.password = "123456";
-        if(!t.account||!t.account.trim()){
+            t = ctx.request.body,
+            user,rongToken,userLI;
+        if(!t.Account||!t.Account.trim()){
             throw new APIError("invalid_input","Missing account");
         }
-        if(!t.password||!t.password.trim()){
+        if(!t.Password||!t.Password.trim()){
             throw new APIError("invalid_input","Missing password");
         }
-        console.log(t);
         user = await User.find({
-            where: {
-                account: t.account,
-                password: t.password
-            }
+            where: t
         });
         console.log(user);
-        ctx.rest(user);
+        if(!user){
+            throw new APIError("invalid_account_password","Account and password error");
+        }   
+        rongToken = await rongCloud.getToken(user.Id,user.UserAlias||user.RealName,user.PortraitUri);
+        if(!rongToken){
+            throw new APIError("invalid_rongToken","get rongtoken error");
+        }
+        ctx.rest(rongToken);
     }
 }

@@ -1,16 +1,56 @@
-const model = require("./bin/model");
+const model = require('./bin/model');
+//const model = require("./bin/model");
 //model.sync();
 let
-    User = model.User;
+    User = model.User,
+    UserLoginInfo = model.UserLoginInfo,
+    Group = model.Group,
+    GroupMembers = model.GroupMembers,
+    Team = model.Team,
+    TeamMember = model.TeamMembers;
+User.hasOne(UserLoginInfo);
+UserLoginInfo.belongsTo(User);
+// User.hasMany(Group);
+// User.hasMany(Team);
+// User.belongsToMany(Group,{through: "IM_GroupMembers"});
+// Group.belongsToMany(User,{through: "IM_GroupMembers"});
+// User.belongsToMany(Team,{through: "IM_TeamMembers"});
+// Team.belongsToMany(User,{through: "IM_TeamMembers"});
 console.log("test");
 (async()=>{
-    var user = await User.create({
-        account: "lhs",
-        username: "火六",
-        password: "123456",
-        avatar: "http://tp2.sinaimg.cn/2211874245/180/40050524279/0"
+    await User.create({
+        Account: "lhs",
+        Password: "123456",
+        UserAlias: "火六"
+    }).then(function(user){
+        var userLoginInfo = UserLoginInfo.build({U_Id:user.Id});
+        user.setIM_UserLoginInfo(userLoginInfo);
+    }).catch(function(err) {
+        // print the error details
+        console.log(err);
     });
-    console.log("created:"+JSON.stringify(user));
+    await User.create({
+        Account: "lhs2",
+        Password: "123456",
+        UserAlias: "火六2"
+    }).then(function(user){
+        var userLoginInfo = UserLoginInfo.build({U_Id:user.Id});
+        user.setIM_UserLoginInfo(userLoginInfo);
+    }).catch(function(err) {
+        // print the error details
+        console.log(err);
+    });
+    await User.create({
+        Account: "lhs3",
+        Password: "123456",
+        UserAlias: "火六3"
+    }).then(function(user){
+        var userLoginInfo = UserLoginInfo.build({U_Id:user.Id});
+        user.setIM_UserLoginInfo(userLoginInfo);
+    }).catch(function(err) {
+        // print the error details
+        console.log(err);
+    });
 })();
 (async()=>{
     var user = await User.findAll();

@@ -1,6 +1,6 @@
 var config = {
     dialect: "mysql",
-    database: "nodejstest",
+    database: "nodekoamysqlim",
     username: "root",
     password: "",
     host: "localhost",

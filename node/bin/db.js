@@ -1,6 +1,7 @@
 //数据库初始化
 const Sequelize = require("sequelize");
 const uuid = require("node-uuid");
+const lodash = require("lodash");
 
 //导入配置文件
 const config = require("./config");
@@ -13,6 +14,7 @@ function generateId(){
 var sequelize = new Sequelize(config.database,config.username,config.password,{
     hsot: config.host,
     dialect: config.dialect || "mysql",
+    port: config.port,
     pool: {
         max: 5,
         min: 0,
@@ -21,56 +23,63 @@ var sequelize = new Sequelize(config.database,config.username,config.password,{
 });
 const ID_TYPE = Sequelize.STRING(50);
 
-function defineModel(name,attributes){
+function defineModel(name,attributes,options){
     var attrs = {};
     for(let key in attributes){
         let value = attributes[key];
         if(typeof(value)==="object"&&value["type"]){
-            value.allowNull = value.allowNull || false;
+            value.allowNull = !(value.allowNull!==undefined&&value.allowNull===false);
             attrs[key] = value;
         }else{
             attrs[key] = {
                 type: value,
-                allowNull: false
+                allowNull: true
             }
         }
     }
-    attrs.id = {
+    attrs.Id = {
         type: ID_TYPE,
-        primaryKey: true
+        allowNull: false,
+        primaryKey: true,
+        unique: true
     };
     attrs.createdAt = {
-        type: Sequelize.BIGINT,
+        type: Sequelize.DATE,
         allowNull: false
     };
     attrs.updatedAt = {
-        type: Sequelize.BIGINT,
+        type: Sequelize.DATE,
         allowNull: false
     };
-    attrs.version = {
-        type: Sequelize.BIGINT,
-        allowNull: false
-    }
-    return sequelize.define(name,attrs,{
+    // attrs.version = {
+    //     type: Sequelize.BIGINT,
+    //     allowNull: false
+    // }
+    var options = lodash.extend({
+        freezeTableName: true,//model对应的表名将与model名相同
         tableName: name,
         timestamps: false,
+        charset: "utf8",
+        collate: "utf8_general_ci",
         hooks: {
             beforeValidate: function(obj){
                 let now = Date.now();
                 if(obj.isNewRecord){
-                    if(!obj.id){
-                        obj.id = generateId();
+                    if(!obj.Id){
+                        obj.Id = generateId();
                     }
                     obj.createdAt = now;
                     obj.updatedAt = now;
-                    obj.version = 0;
+                    //obj.version = 0;
                 }else{
                     obj.updatedAt = now;
-                    obj.version++;
+                    //obj.version++;
                 }
             }
         }
-    });
+    },options||{});
+    //console.dir(options);
+    return sequelize.define(name,attrs,options);
 }
 
 //类型数组
@@ -81,7 +90,9 @@ const TYPES = [
     "TEXT",
     "DOUBLE",
     "DATEONLY",
-    "BOOLEAN"
+    "BOOLEAN",
+    "DATEONLY",
+    "DATE"
 ];
 var exp = {
     defineModel: defineModel,
@@ -91,7 +102,7 @@ var exp = {
             sequelize.sync({force:true});
         }else{
             throw new Error("Connot sync() when NODE_ENV is set to 'production'.");
-        }
+        } 
     }
 }
 for(let type of TYPES){

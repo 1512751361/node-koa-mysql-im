@@ -1,17 +1,23 @@
 "use strict";
 const Koa = require("koa");
 const bodyParser = require("koa-bodyparser");
+//解决跨域模块
+var cors = require('koa-cors');
 
 const controller = require("./bin/controller");
 const templating = require("./bin/templating");
 const rest = require("./bin/rest");
 
-//数据库测试
-const test = require("./test");
 
 const isProduction = process.env.NODE_ENV === "production"||true;
 
 const app = new Koa();
+
+//数据库测试
+const test = require("./test");
+
+//解决跨域
+app.use(cors());
 
 //第一个middleware是记录URL已经页面执行时间
 app.use(async(ctx,next)=>{
