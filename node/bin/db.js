@@ -96,10 +96,12 @@ const TYPES = [
 ];
 var exp = {
     defineModel: defineModel,
-    sync: ()=>{
+    sync: (successCall,errorCall)=>{
+        successCall = successCall||function(){console.log('init db ok.');};
+        errorCall = errorCall||function(error){console.error(error);};
         if(process.env.NODE_ENV !== "production"){
             console.log(`${Date.now()}`);
-            sequelize.sync({force:true});
+            sequelize.sync({force:true}).then(successCall).catch(errorCall);
         }else{
             throw new Error("Connot sync() when NODE_ENV is set to 'production'.");
         } 
@@ -110,5 +112,6 @@ for(let type of TYPES){
 }
 exp.ID = ID_TYPE;
 exp.generateId = generateId;
+exp.sequelize = sequelize;
 
 module.exports = exp;

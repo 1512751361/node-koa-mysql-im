@@ -29,11 +29,21 @@ module.exports = db.defineModel("IM_UserLoginInfo",{
     },
     AccessToken: {
         type: db.STRING(200),
+        unique: true,
         comment: "请求使用的Token"
     },
     RefreshToken: {
         type: db.STRING(200),
+        unique: true,
         comment: "更新Token使用的Token"
+    },
+    TokenOverdueTime: {
+        type: db.DATE(),
+        comment: "Token过期时间"
+    },
+    APPId: {
+        type: db.STRING(50),
+        comment: "APPId"
     },
     PhoneType: {
         type: db.STRING(50),
@@ -48,10 +58,5 @@ module.exports = db.defineModel("IM_UserLoginInfo",{
         comment: "APP的版本号"
     }
 },{
-    indexes: [{
-        name: "userLoginInfo_userId",
-        method: "BTREE",
-        fields: ["U_Id"]
-    }],
     comment: "用户登录信息"
 });

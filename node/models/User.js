@@ -7,6 +7,9 @@ module.exports = db.defineModel("IM_Users",{
         type: db.STRING(50),
         allowNull: false,
         unique: true,
+        validate: {
+            isAlphanumeric: true//只允许字母和数字
+        },
         comment: "用户名"
     },
     Password: {
@@ -65,5 +68,10 @@ module.exports = db.defineModel("IM_Users",{
         comment: "状态"
     }
 },{
+    instanceMethods: {//虚拟访问器
+        username: function(){
+            return this.RealName||this.UserAlias||this.Account||"";
+        }
+    },
     comment: "用户基本信息"
 });

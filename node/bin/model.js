@@ -13,7 +13,8 @@ for(let f of js_files){
     let name = f.substr(0,f.length-3);
     module.exports[name] = require(__dirname+"/../models/"+f);
 }
-module.exports.sync = ()=>{
+module.exports.sequelize = db.sequelize;
+module.exports.sync = (successCall,errorCall)=>{
     console.log(1);
-    db.sync();
+    db.sync(successCall,errorCall);
 }

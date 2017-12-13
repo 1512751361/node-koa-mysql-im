@@ -18,6 +18,11 @@ module.exports = db.defineModel("IM_GroupMembers",{
             key: "Id"
         },
         comment: "用户Id"
+    },
+    Roles: {
+        type: db.BIGINT(),
+        defaultValue: 0,
+        comment: "群角色(默认值为0,1表示群管理员,2表示群主)"
     }
 },{
     indexes: [{
