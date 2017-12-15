@@ -48,20 +48,22 @@ module.exports = {
             if(!user){
                 throw new APIError("invalid_account_password","Account and password error");
             }
-            rongToken = await rongCloud.getToken(user.Id,user.UserAlias||user.RealName,user.PortraitUri);
-            if(!rongToken){
-                throw new APIError("invalid_rongToken","get rongtoken error");
-            }
             var params = lodash.extend(t,{
                 AccessToken: encrypt.getToken((t.APPId||"")+(t.PhoneType||"window")),
-                RefreshToken: encrypt.getToken((t.APPId||"")+(t.PhoneType||"window")),
-                RongCloudToken: rongToken.token
+                RefreshToken: encrypt.getToken((t.APPId||"")+(t.PhoneType||"window"))
             });
             var uli = (await UserLoginInfo.find({
                 where: {
                     U_Id: user.Id
                 }
             })).get();
+            if(!uli||!uli.RongCloudToken){
+                rongToken = await rongCloud.getToken(user.Id,user.UserAlias||user.RealName,user.PortraitUri);
+                if(!rongToken){
+                    throw new APIError("invalid_rongToken","get rongtoken error");
+                }
+                params.RongCloudToken = rongToken.token;
+            }
             console.log(params);
             if(uli){            
                 await UserLoginInfo.update(params,{
@@ -102,7 +104,7 @@ module.exports = {
         console.log(t);
         user = await getUserByToken(t.Token||"");
         if(!user&&!user.user){
-            throw new APIError("invalid_user","user error");
+            throw new APIError("100","token error");
         }
         params = {
             mine: {

@@ -1,8 +1,8 @@
 "use strict";
 //融云配置文件
 var config = {
-    appSecret: "y7MbWxjKUTWE",
-    AppKey: "bmdehs6pb1xns"
+    appSecret: "GOZBVmEU5eKb",
+    AppKey: "25wehl3u29kbw"
 }
 //导入融云模块
 const rongCloudSdk = require('rongcloud-sdk');
