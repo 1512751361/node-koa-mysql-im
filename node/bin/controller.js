@@ -2,6 +2,28 @@
 "use strict";
 //导入fs文件
 const fs = require("fs");
+const multer = require('koa-multer');//加载koa-multer模块
+//文件上传  
+//配置  
+var storage = multer.diskStorage({  
+    //文件保存路径  
+    destination: function (req, file, cb) {  
+      cb(null, 'upload')  
+    },  
+    //修改文件名称  
+    filename: function (req, file, cb) {  
+      var fileFormat = (file.originalname).split(".");  
+      cb(null,Date.now() + "." + fileFormat[fileFormat.length - 1]);  
+    }  
+  })  
+  //加载配置  
+  var upload = multer({ storage: storage });  
+  //路由  
+//   router.post('/upload', upload.single('file'), async (ctx, next) => {  
+//     ctx.body = {  
+//       filename: ctx.req.file.filename//返回文件名  
+//     }  
+//   })
 
 //添加路由请求
 function addMapping(router,mapping){
@@ -12,7 +34,7 @@ function addMapping(router,mapping){
             router.get(path,mapping[url]);
         }else if(url.startsWith("POST ")){
             var path = url.substring(5);
-            router.post(path,mapping[url]);
+            router.post(path,upload.single('file'),mapping[url]);
         }else if(url.startsWith("PUT ")){
             var path = url.substring(4);
             router.put(path,mapping[url]);

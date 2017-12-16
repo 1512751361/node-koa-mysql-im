@@ -85,7 +85,7 @@ module.exports = {
                 Password: null
             }));
             ctx.rest({
-                RongCloudToken: rongToken.token,
+                RongCloudToken: uli.RongCloudToken,
                 AccessToken: params.AccessToken,
                 RefreshToken: params.RefreshToken,
                 user: lodash(user||{},uli||{},{
