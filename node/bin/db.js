@@ -6,6 +6,7 @@ const lodash = require("lodash");
 //导入配置文件
 const config = require("./config");
 
+var isAutoId = false;
 
 function generateId(){
     return uuid.v4();
@@ -33,16 +34,19 @@ function defineModel(name,attributes,options){
         }else{
             attrs[key] = {
                 type: value,
-                allowNull: true
+                allowNull: false
             }
         }
     }
-    attrs.Id = {
-        type: ID_TYPE,
-        allowNull: false,
-        primaryKey: true,
-        unique: true
-    };
+    if(!attrs.Id){
+        isAutoId = true;
+        attrs.Id = {
+            type: ID_TYPE,
+            allowNull: false,
+            primaryKey: true,
+            unique: true
+        };
+    }    
     attrs.createdAt = {
         type: Sequelize.DATE,
         allowNull: false
@@ -65,7 +69,7 @@ function defineModel(name,attributes,options){
             beforeValidate: function(obj){
                 let now = Date.now();
                 if(obj.isNewRecord){
-                    if(!obj.Id){
+                    if(!obj.Id&&isAutoId){
                         obj.Id = generateId();
                     }
                     obj.createdAt = now;
@@ -91,8 +95,8 @@ const TYPES = [
     "DOUBLE",
     "DATEONLY",
     "BOOLEAN",
-    "DATEONLY",
-    "DATE"
+    "DATE",
+    "DECIMAL"
 ];
 var exp = {
     defineModel: defineModel,
